@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intimacy Lab</title>
+<meta name="description" content="Intimacy Lab — a much needed NSFW empathetic venture. 18+">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void: #170f13;
+    --void-deep: #0e0a0d;
+    --blush: #e7a8a0;
+    --ember: #d98c5f;
+    --paper: #f3e9e2;
+    --whisper: #a1878c;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    background: var(--void);
+    color: var(--paper);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* film-grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -10%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 3;
+    mix-blend-mode: overlay;
+  }
+
+  /* radial vignette, deepens toward edges */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, transparent 0%, var(--void-deep) 115%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(70vw, 720px);
+    height: min(70vw, 720px);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(231,168,160,0.16) 0%, rgba(217,140,95,0.07) 45%, transparent 72%);
+    filter: blur(10px);
+    animation: breathe 5.6s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.94); }
+    50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.04); }
+  }
+
+  main {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 24px;
+    max-width: 640px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 450;
+    font-style: italic;
+    font-size: clamp(2.75rem, 8vw, 5.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    text-shadow: 0 0 60px rgba(231,168,160,0.25);
+  }
+
+  .subtitle {
+    margin-top: 22px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--whisper);
+    max-width: 30ch;
+    line-height: 1.55;
+  }
+
+  .subtitle .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62em;
+    letter-spacing: 0.1em;
+    color: var(--ember);
+    border: 1px solid rgba(217,140,95,0.4);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin: 0 2px;
+    vertical-align: 1px;
+  }
+
+  .byline {
+    margin-top: 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    color: var(--whisper);
+  }
+
+  .byline a {
+    color: var(--blush);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(231,168,160,0.35);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .byline a:hover,
+  .byline a:focus-visible {
+    color: var(--paper);
+    border-color: var(--paper);
+  }
+
+  .byline a:focus-visible {
+    outline: 2px solid var(--blush);
+    outline-offset: 3px;
+  }
+
+  /* pulse-line monitor, bottom edge — a single tile scrolled by exactly
+     its own width, so the loop point is invisible */
+  .pulse {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    z-index: 4;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 56' width='160' height='56'%3E%3Cpath d='M0,28 L58,28 L68,10 L79,46 L90,18 L101,28 L160,28' fill='none' stroke='%23e7a8a0' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: 0 0;
+    background-size: 160px 56px;
+    animation: pulse-scroll 4.8s linear infinite;
+  }
+
+  @keyframes pulse-scroll {
+    from { background-position: 0 0; }
+    to   { background-position: -160px 0; }
+  }
+
+  footer {
+    position: fixed;
+    bottom: 76px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--whisper);
+    opacity: 0.5;
+    z-index: 4;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glow, .pulse {
+      animation: none;
+    }
+    .glow { opacity: 0.75; }
+  }
+
+  @media (max-width: 480px) {
+    .pulse { height: 36px; background-size: 160px 36px; }
+    footer { bottom: 52px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="glow" aria-hidden="true"></div>
+
+  <main>
+    <h1>intimacy lab</h1>
+    <p class="subtitle">a much needed <span class="tag">NSFW</span> empathetic venture</p>
+    <p class="byline">by Shelton · <a href="mailto:shelton@empathylab.io">shelton@empathylab.io</a></p>
+  </main>
+
+  <footer>18+ · currently in threeplay (listening, learning, loving)</footer>
+
+  <div class="pulse" aria-hidden="true"></div>
+
+</body>
+</html>
